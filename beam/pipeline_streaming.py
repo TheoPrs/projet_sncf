@@ -3,11 +3,15 @@ from apache_beam.io.gcp.pubsub import ReadFromPubSub
 from apache_beam.io.gcp.bigquery import WriteToBigQuery
 import json
 import datetime
+from dotenv import load_dotenv
+import os
 
-PROJECT_ID = "gcpsncf"
-TOPIC_ID = "sncf-circulations"
-DATASET_ID = "sncf_dataset"
-TABLE_ID = "gcpsncf.sncf_dataset.raw_streaming"
+load_dotenv()
+
+PROJECT_ID = os.getenv("PROJECT_ID")
+TOPIC_ID = os.getenv("TOPIC_ID")
+DATASET_ID = os.getenv("DATASET_ID")
+TABLE_ID = os.getenv("TABLE_ID")
 topic = f"projects/{PROJECT_ID}/topics/{TOPIC_ID}"
 
 raw_streaming = "circulation_id:STRING, ligne_id:STRING, date_circulation:DATE ,gare_depart:STRING, gare_arrivee:STRING, heure_depart:TIME, heure_arrivee:TIME, retard:INTEGER, etat:STRING"
