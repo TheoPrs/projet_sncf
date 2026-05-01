@@ -1,40 +1,55 @@
-import json
 import random
-from datetime import datetime, timedelta
-from google.cloud import pubsub_v1
+from dataclasses import dataclass, asdict
+import uuid
+import datetime
+import time
 
-# Données de référence
-LIGNES = ["TER Nord", "TER Hauts-de-France", "Intercités", "TGV"]
-GARES = ["Lille-Flandres", "Arras", "Amiens", "Valenciennes", "Douai", "Lens", "Béthune"]
+retard = [0,5,10,20,30]
+weight = [70,5,10,10,5]
+gares = ["Lille", "Paris", "Marseille","Lyon","Roubaix","Nice","Tourcoing","Douai","Arras","Valenciennes"]
+lignes = ["TER","TGV","Intercite"]
 
-PROJECT_ID = "projet_sncf"
-TOPIC_ID = "line_raw"
+@dataclass
+class circulation:
+  circulation_id:uuid
+  ligne_id:str
+  date_circulation:datetime
+  gare_depart:str
+  gare_arrivee:str
+  heure_depart:str
+  heure_arrivee:str
+  retard:int
+  etat:str
 
-def generate_train():
-    depart = random.choice(GARES)
-    arrivee = random.choice([g for g in GARES if g != depart])
-    retard = random.randint(-5, 120) 
+def mock_generator():
+ while True : 
+    depart_heure = random.randint(0,23)
+    depart_minute = random.randint(0,59)
+    if depart_heure == 23 and depart_minute == 59:
+        depart_minute = random.randint(0, 58)
+    arrivee_heure = random.randint(depart_heure,23)
+    if depart_heure == arrivee_heure:
+        arrivee_minute = random.randint(depart_minute+1,59)
+    else:
+        arrivee_minute = random.randint(0,59)
+           
+    depart_gare = random.choice(gares)
+    arrivee_gare = random.choice(gares)
+    while arrivee_gare == depart_gare:
+     arrivee_gare = random.choice(gares)
+    ret = random.choices(retard,weight)[0]
 
-    return {
-        "train_id": f"TER_{random.randint(1000, 9999)}",
-        "ligne_id": random.choice(LIGNES),
-        "gare_depart": depart,
-        "gare_arrivee": arrivee,
-        "date_circulation": datetime.now().strftime("%Y-%m-%d"),
-        "heure_depart": (datetime.now() + timedelta(minutes=random.randint(0, 1440))).strftime("%H:%M:%S"),
-        "retard_minutes": retard,
-        "statut": "supprime" if random.random() < 0.02 else "circule"
-    }
+    obj = circulation(
+    circulation_id = uuid.uuid4(),
+    ligne_id= f"{random.choice(lignes)}_{random.randint(0,100)}",
+    date_circulation=datetime.datetime.now(),
+    gare_depart= depart_gare,
+    gare_arrivee= arrivee_gare,
+    heure_depart= datetime.time(depart_heure,depart_minute),
+    heure_arrivee= datetime.time(arrivee_heure,arrivee_minute),
+    retard=ret,
+    etat= "À l'heure" if (ret < 5)  else "En retard"
+    
+    )
 
-def publish_batch(n=100):
-  publisher = pubsub_v1.PublisherClient()
-  topic_path = publisher.topic_path(PROJECT_ID, TOPIC_ID)
-  for _ in range (n):
-    train = generate_train()
-    data = json.dumps(train).encode("UTF-8")
-    future = publisher.publish(topic_path,data)
-    future.result()
-    print(f"Publié : {train['train_id']}")
-
-if __name__ == "__main__":
-    batch = publish_batch(100)
+    yield obj
