@@ -15,7 +15,6 @@ def parse_clean(message):
     data = json.loads(message.decode('UTF-8'))
     data["etat"] = data["etat"].replace("À", "A")
     data["date_circulation"] = datetime.datetime.strptime(data["date_circulation"],"%Y-%m-%d %H:%M:%S.%f").strftime("%Y-%m-%d")
-    print(data)
     return data
 
 options = beam.options.pipeline_options.PipelineOptions(streaming=True)
@@ -23,7 +22,7 @@ with beam.Pipeline(options=options) as p:
   result = (p 
      | "Lire" >> ReadFromPubSub(topic=topic)
      | "Parser" >> beam.Map(parse_clean)
-     | "Filtrer" >> beam.Filter(lambda x: print(x["heure_depart"], x["heure_arrivee"]) or x["heure_depart"] < x["heure_arrivee"] and x["gare_depart"] != x["gare_arrivee"])
+     | "Filtrer" >> beam.Filter(lambda x: x["heure_depart"] < x["heure_arrivee"] and x["gare_depart"] != x["gare_arrivee"])
      | "Ecrire" >> WriteToBigQuery(
          table=TABLE_ID,
          schema = raw_streaming,
@@ -33,5 +32,4 @@ with beam.Pipeline(options=options) as p:
          )
       
     )
-  result['FailedRows'] | "Erreurs" >> beam.Map(print)
     
