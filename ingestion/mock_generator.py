@@ -25,7 +25,7 @@ def mock_generator():
  while True : 
     depart_heure = random.randint(0,23)
     depart_minute = random.randint(0,59)
-    if depart_heure == 23 and depart_minute == 59:
+    if depart_minute == 59:
         depart_minute = random.randint(0, 58)
     arrivee_heure = random.randint(depart_heure,23)
     if depart_heure == arrivee_heure:
