@@ -1,5 +1,5 @@
 import random
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 import uuid
 import datetime
 import time
