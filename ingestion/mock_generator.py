@@ -48,7 +48,7 @@ def mock_generator():
     heure_depart= datetime.time(depart_heure,depart_minute),
     heure_arrivee= datetime.time(arrivee_heure,arrivee_minute),
     retard=ret,
-    etat= "À l'heure" if (ret < 5)  else "En retard"
+    etat= "a_l_heure" if (ret < 5)  else "en_retard"
     
     )
 

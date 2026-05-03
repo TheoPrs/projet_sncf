@@ -14,7 +14,7 @@ publisher = pubsub_v1.PublisherClient()
 topic_path = publisher.topic_path(PROJECT_ID, TOPIC_ID)
 gen = mock_generator()
 
-for _ in range(400): 
+for _ in range(500): 
   circulation = next(gen)
   circulation_dict = asdict(circulation)
   data = json.dumps(circulation_dict, default=str, ensure_ascii=False).encode('UTF-8')
