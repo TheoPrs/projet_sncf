@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: stg_retards
+    columns:
+      - name: circulation_id
+        tests:
+          - not_null
+          - unique
+      - name: ligne_id
+        tests:
+          - not_null
+      - name: date_circulation
+        tests:
+          - not_null
+      - name: gare_depart
+        tests: 
+          - not_null
+      - name: gare_arrivee
+        tests: 
+          - not_null
+      - name: heure_depart
+        tests:
+          - not_null
+      - name: heure_arrivee
+        tests:
+          - not_null
+      - name: retard
+        tests:
+          - not_null
+      - name: etat
+        tests:
+          - accepted_values:
+              values: ["a_l_heure", "en_retard"]

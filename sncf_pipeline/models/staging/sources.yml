@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: sncf_dataset
+    database: gcpsncf
+    schema: sncf_dataset
+    tables:
+      - name: raw_streaming  
+      - name: raw_batch  
