@@ -1,0 +1,8 @@
+google-cloud-pubsub==2.37.0
+google-cloud-bigquery==3.41.0
+google-cloud-storage==2.19.0
+apache-beam[gcp]==2.73.0
+python-dotenv==1.2.2
+dbt-bigquery==1.11.1
+flake8==7.3.0
+pytest==9.0.3
