@@ -1,0 +1,10 @@
+sncf_pipeline:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: oauth
+      project: gcpsncf
+      dataset: sncf_dataset
+      location: europe-west1
+      threads: 4

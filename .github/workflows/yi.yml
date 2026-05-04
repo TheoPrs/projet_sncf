@@ -28,4 +28,4 @@ jobs:
         run: pytest
 
       - name: dbt compile
-        run: cd sncf_pipeline && dbt compile
+        run: cd sncf_pipeline && dbt compile --profiles-dir .
