@@ -29,31 +29,32 @@ raw_batch = (
 )
 filename = f"gs://{BUCKET_NAME}/{DESTINATION_BLOB}"
 
+def run():
+    def parseclean(message):
+        valeurs = message.split(",")
+        data = dict(zip(header, valeurs))
+        data["etat"] = data["etat"].replace("À", "A")
+        data["date_circulation"] = datetime.datetime.strptime(
+            data["date_circulation"], "%Y-%m-%d %H:%M:%S.%f"
+        ).strftime("%Y-%m-%d")
+        return data
 
-def parseclean(message):
-    valeurs = message.split(",")
-    data = dict(zip(header, valeurs))
-    data["etat"] = data["etat"].replace("À", "A")
-    data["date_circulation"] = datetime.datetime.strptime(
-        data["date_circulation"], "%Y-%m-%d %H:%M:%S.%f"
-    ).strftime("%Y-%m-%d")
-    return data
 
-
-with beam.Pipeline() as p:
-    result = (
-        p
-        | "Lire" >> ReadFromText(filename, skip_header_lines=1)
-        | "Parse" >> beam.Map(parseclean)
-        | "Filtrer" >> beam.Filter(
-            lambda x: x["heure_depart"] < x["heure_arrivee"]
-            and x["gare_depart"] != x["gare_arrivee"]
+    with beam.Pipeline() as p:
+        result = (
+            p
+            | "Lire" >> ReadFromText(filename, skip_header_lines=1)
+            | "Parse" >> beam.Map(parseclean)
+            | "Filtrer" >> beam.Filter(
+                lambda x: x["heure_depart"] < x["heure_arrivee"]
+                and x["gare_depart"] != x["gare_arrivee"]
+            )
+            | "Ecrire" >> WriteToBigQuery(
+                table=TABLE_ID,
+                schema=raw_batch,
+                create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
+                write_disposition=beam.io.BigQueryDisposition.WRITE_APPEND,
+                method="STREAMING_INSERTS",
+            )
         )
-        | "Ecrire" >> WriteToBigQuery(
-            table=TABLE_ID,
-            schema=raw_batch,
-            create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
-            write_disposition=beam.io.BigQueryDisposition.WRITE_APPEND,
-            method="STREAMING_INSERTS",
-        )
-    )
+if __name__ == "__main__" : run()
