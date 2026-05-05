@@ -1,7 +1,7 @@
 import sys
-sys.path.insert(0, 'ingestion')
 from mock_generator import mock_generator
 from dataclasses import asdict
+sys.path.insert(0, 'ingestion')
 
 
 def test_data_mock_generator():
