@@ -132,9 +132,9 @@ et sera remplacé par les appels API réels dès réception des accès.
 - [x] Pipeline Beam streaming
 - [x] Pipeline Beam batch
 - [x] Modèles dbt
-- [ ] Great Expectations
-- [ ] DAG Airflow
-- [ ] Dashboard Looker Studio
+- [x] Great Expectations
+- [x] DAG Airflow
+- [x] Dashboard Looker Studio
 - [x] CI/CD GitHub Actions
 
 ---
@@ -148,9 +148,15 @@ contractuelles de l'opérateur ferroviaire.
 
 ---
 
+## Dashboard
+
+- LookerStudio : [LookerStudio](https://datastudio.google.com/reporting/4db9420f-94c7-4921-a723-aad1aa3f2d20)
+
+---
+
 ## Auteur
 
 **Theo Perus** — Data Engineer
 
-- LinkedIn : [linkedin.com/in/theoperus](https://www.linkedin.com/in/theo-perus/)
-- Portfolio GCP e-commerce : [github.com/TheoPrs/gcp_pipeline_ecommerce](https://github.com/TheoPrs/gcp_pipeline_ecommerce)
+- LinkedIn : [linkedin](https://www.linkedin.com/in/theo-perus/)
+- Portfolio GCP e-commerce : [github](https://github.com/TheoPrs/gcp_pipeline_ecommerce)
